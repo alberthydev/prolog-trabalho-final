@@ -24,3 +24,20 @@ not_ataca(R1, [R2|Resto], Distancia) :-
     abs(R1 - R2) \= Distancia,
     ProxDist is Distancia + 1,
     not_ataca(R1, Resto, ProxDist).
+
+% Predicado para exibir o resultado de forma bonita
+exibir([]).
+exibir([H|T]) :-
+    format('Linha ~w: ', [H]),
+    print_colunas(H),
+    nl,
+    exibir(T).
+
+print_colunas(Pos) :-
+    foreach(member(C, [1,2,3,4,5,6,7,8]),
+            (C =:= Pos -> write(' Q ') ; write(' . '))).
+
+% Consulta principal atualizada
+jogar :-
+    resolver(Solucao),
+    exibir(Solucao).
