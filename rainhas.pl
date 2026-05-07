@@ -1,43 +1,19 @@
-% O tabuleiro é uma lista de posições
-% Exemplo: [1, 5, 8, ...] onde o índice é a coluna e o valor é a linha.
+solution([]).
 
-resolver(Rainhas) :-
-    Rainhas = [_,_,_,_,_,_,_,_],
-    template(Rainhas),
-    validar(Rainhas).
+solution([X/Y|Others]) :-
+    solution(Others),
+    member(Y,[1,2,3,4,5,6,7,8]),
+    noattack(X/Y, Others).
 
-% Garante que cada rainha esteja em uma linha de 1 a 8
-template([]).
-template([H|T]) :-
-    member(H, [1,2,3,4,5,6,7,8]),
-    template(T).
+noattack(_, []).
 
-% Regra de validação: verifica se as rainhas não se atacam[cite: 1]
-validar([]).
-validar([H|T]) :-
-    not_ataca(H, T, 1),
-    validar(T).
+noattack(X/Y, [X1/Y1| Others]):-
+    Y=\=Y1,
+    Y1-Y=\=X1-X,
+    Y1-Y=\=X-X1,
+noattack(X/Y, Others).
 
-not_ataca(_, [], _).
-not_ataca(R1, [R2|Resto], Distancia) :-
-    R1 \= R2,
-    abs(R1 - R2) \= Distancia,
-    ProxDist is Distancia + 1,
-    not_ataca(R1, Resto, ProxDist).
+member(X, [X|_]).
+member(X, [_|Others]) :- member(X, Others).
 
-% Predicado para exibir o resultado de forma bonita
-exibir([]).
-exibir([H|T]) :-
-    format('Linha ~w: ', [H]),
-    print_colunas(H),
-    nl,
-    exibir(T).
-
-print_colunas(Pos) :-
-    foreach(member(C, [1,2,3,4,5,6,7,8]),
-            (C =:= Pos -> write(' Q ') ; write(' . '))).
-
-% Consulta principal atualizada
-jogar :-
-    resolver(Solucao),
-    exibir(Solucao).
+template([1/Y1, 2/Y2, 3/Y3, 4/Y4, 5/Y5, 6/Y6, 7/Y7, 8/Y8]).
